@@ -1,19 +1,12 @@
 {% extends 'base.html.twig' %}
-{% block title %}
-  PAGINA INICIAL!
-{% endblock %}
-
 {% block body %}
-  <div>
-    <h1>BEM VINDO!</h1>
+  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
     {% if (posts|length) >= 1 %}
       {% for post in posts %}
-        <br />
-        <h1>{{ post.title }}</h1>
-        <a href="{{ path('app_micro_post_show', { post: post.id }) }}">ver post</a>
+        {{ include('micro_post/_post.html.twig', { post: post }) }}
       {% endfor %}
     {% else %}
-      <h1>nada por aqui...</h1>
+      <div class="rounded-md p-2 border-yellow-300 bg-yellow-50 border dark:border-yellow-600 dark:bg-yellow-700 dark:text-white mb-4">Nothing yet...</div>
     {% endif %}
   </div>
 {% endblock %}

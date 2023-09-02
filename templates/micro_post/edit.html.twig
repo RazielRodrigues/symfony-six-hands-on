@@ -1,19 +1,7 @@
-{% extends "base.html.twig" %}
-{% block title %}
-	EDITAR
+{% extends 'base.html.twig' %}
+{% block bread %}
+  → Edit Post
 {% endblock %}
-
 {% block body %}
-	{{ form(form) }}
-
-
-		{# {{ form_start(form) }}
-										{{ form_errors(form) }}
-								
-										{{ form_row(form.title) }}
-										{{ form_row(form.text) }}
-								
-										{{ form_row(form.submit, { 'label': 'Submit me' }) }}
-										{{ form_end(form) }} #}
-
-	{% endblock %}
+  {{ include('micro_post/_form.html.twig', { form: form }) }}
+{% endblock %}
