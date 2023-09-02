@@ -8,6 +8,11 @@
 			BEM VINDO!
 		</h1>
 		{% if posts|length >= 1 %}
+
+			{% for message in app.flashes('success') %}
+				{{message}}
+			{% endfor %}
+
 			{% for post in posts %}
 				<br>
 				<h1>{{post.title}}</h1>
