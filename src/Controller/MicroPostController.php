@@ -9,6 +9,7 @@ use App\Form\MicroPostType;
 use App\Repository\CommentRepository;
 use App\Repository\MicroPostRepository;
 use DateTime;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,6 +19,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class MicroPostController extends AbstractController
 {
+
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/micro-post', name: 'app_micro_post')]
     public function index(MicroPostRepository $posts): Response
     {
@@ -36,6 +39,7 @@ class MicroPostController extends AbstractController
     }
 
     #[Route('/micro-post/add', name: 'app_micro_post_add', priority: 2)]
+    #[IsGranted('ROLE_EDITOR')]
     public function add(Request $request, MicroPostRepository $microPostRepository): Response
     {
         $micropost = new MicroPost();
@@ -49,8 +53,7 @@ class MicroPostController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $post = $form->getData();
-            $post->setCreated(new DateTime());
-
+            $post->setAuthor($this->getUser());
 
             $microPostRepository->add($post, true);
             $this->addFlash('success', 'ok inserido!');
@@ -63,6 +66,7 @@ class MicroPostController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_EDITOR')]
     #[Route('/micro-post/{post}/edit', name: 'app_micro_post_edit')]
     public function edit(MicroPost $post, Request $request, MicroPostRepository $microPostRepository): Response
     {
@@ -72,6 +76,8 @@ class MicroPostController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $post = $form->getData();
+            $post->setAuthor($this->getUser());
+
             $microPostRepository->add($post, true);
 
             $this->addFlash('success', 'ok editado!');
@@ -84,7 +90,7 @@ class MicroPostController extends AbstractController
         ]);
     }
 
-
+    #[IsGranted('ROLE_COMMENTER')]
     #[Route('/micro-post/{post}/comment', name: 'app_micro_post_comment')]
     public function addComment(Request $request, MicroPost $post, CommentRepository $commentRepository): Response
     {
@@ -97,6 +103,7 @@ class MicroPostController extends AbstractController
 
             $comment = $form->getData();
             $comment->setPost($post);
+            $comment->setAuthor($this->getUser());
 
             $commentRepository->add($comment, true);
             $this->addFlash('success', 'commented!');

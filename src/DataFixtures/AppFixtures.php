@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Comment;
 use App\Entity\MicroPost;
 use App\Entity\User;
 use DateTime;
@@ -24,11 +25,17 @@ class AppFixtures extends Fixture
         $user->setPassword($this->userPasswordHasher->hashPassword($user, '12345678'));
         $manager->persist($user);
 
-        $microPost1 = new MicroPost();
-        $microPost1->setTitle('TEST');
-        $microPost1->setText('UHULL');
-        $microPost1->setCreated(new DateTime());
-        $manager->persist($microPost1);
+        $microPost = new MicroPost();
+        $microPost->setTitle('PHP 8 AWESOME!');
+        $microPost->setText('Lorem Ipsum Dolor');
+        $microPost->setCreated(new DateTime());
+        $microPost->setAuthor($user);
+        $manager->persist($microPost);
+
+        $comment = new Comment();
+        $comment->setAuthor($user);
+        $comment->setPost($microPost);
+        $comment->setText('comentando...');
 
         $manager->flush();
     }

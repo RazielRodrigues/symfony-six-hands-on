@@ -8,7 +8,7 @@
     <a href="#">Like <span class="px-2 rounded-md bg-gray-200 dark:bg-gray-700">0</span></a>
   </div>
   <div class="text-sm text-gray-500 dark:text-gray-400">
-    <a href="#">user@email.com</a>
+    <a href="#">{{ post.author.email }}</a>
   </div>
   <div class="text-sm text-gray-500 dark:text-white">
     <a href="{{ path('app_micro_post_edit', { post: post.id }) }}" class="mr-2">Edit</a>

@@ -7,21 +7,21 @@
 {% endblock %}
 
 {% block body %}
-  {# <div class="flex items-center mb-4">
+  <div class="flex items-center mb-4">
     <div>
-      {{ include('shared/_avatar.html.twig', { profile: post.author.userProfile, size: 16 }) }}
+      {# {{ include('shared/_avatar.html.twig', { profile: post.author.userProfile, size: 16 }) }} #}
     </div>
     <div class="ml-4">
       <div class="text-xl">
-        {{ post.author.userProfile.name ?? post.author.email }}
+        {# {{ post.author.userProfile.name ?? post.author.email }} #}
       </div>
       <div class="text-sm text-gray-500 dark:text-gray-400">
-        <a href="{{ path('app_profile', { id: post.author.id }) }}">
+        {# <a href="{{ path('app_profile', { id: post.author.id }) }}">
           {{ post.author.email }}
-        </a>
+        </a> #}
       </div>
     </div>
-  </div> #}
+  </div>
 
   {{ include('micro_post/_post.html.twig', {post: post}) }}
 
@@ -34,11 +34,11 @@
         </div>
         <div>
           <div class="font-medium text-gray-800 dark:text-gray-300">
-            {# <a href="{{ path('app_profile', { id: comment.author.id }) }}">
-              {{ comment.author.email }}
-            </a> #}
+            {# <a href="{{ path('app_profile', { id: commen.author.id }) }}"> #}
+              {{ commen.author.email }}
+            {# </a> #}
           </div>
-          {# <div class="font-light text-gray-500 dark:text-gray-500">{{ comment.created | date("M j, Y")  }}</div> #}
+          <div class="font-light text-gray-500 dark:text-gray-500">{{ commen.created | date("M j, Y")  }}</div>
         </div>
       </div>
       <div class="flex">
