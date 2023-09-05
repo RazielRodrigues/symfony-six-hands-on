@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 class MicroPostController extends AbstractController
 {
 
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    // #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/micro-post', name: 'app_micro_post')]
     public function index(MicroPostRepository $posts): Response
     {
@@ -39,7 +39,7 @@ class MicroPostController extends AbstractController
     }
 
     #[Route('/micro-post/add', name: 'app_micro_post_add', priority: 2)]
-    #[IsGranted('ROLE_EDITOR')]
+    #[IsGranted(MicroPost::EDIT, 'post')]
     public function add(Request $request, MicroPostRepository $microPostRepository): Response
     {
         $micropost = new MicroPost();
@@ -66,7 +66,7 @@ class MicroPostController extends AbstractController
         ]);
     }
 
-    #[IsGranted('ROLE_EDITOR')]
+    #[IsGranted(MicroPost::EDIT, 'post')]
     #[Route('/micro-post/{post}/edit', name: 'app_micro_post_edit')]
     public function edit(MicroPost $post, Request $request, MicroPostRepository $microPostRepository): Response
     {
@@ -90,7 +90,7 @@ class MicroPostController extends AbstractController
         ]);
     }
 
-    #[IsGranted('ROLE_COMMENTER')]
+    #[IsGranted(MicroPost::VIEW, 'post')]
     #[Route('/micro-post/{post}/comment', name: 'app_micro_post_comment')]
     public function addComment(Request $request, MicroPost $post, CommentRepository $commentRepository): Response
     {
