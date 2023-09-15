@@ -17,13 +17,13 @@ class UserChecker implements UserCheckerInterface
     public function checkPreAuth(UserInterface $user): void
     {
 
-        if (null === $user->getBannerUntil()) {
+        if (null === $user->getBannedUntil()) {
             return;
         }
 
         $now = new DateTime();
 
-        if ($now < $user->getBannerUntil()) {
+        if ($now < $user->getBannedUntil()) {
             throw new AccessDeniedException('Banned brother!');
         }
     }

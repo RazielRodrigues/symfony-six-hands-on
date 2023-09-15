@@ -29,6 +29,25 @@ class MicroPostController extends AbstractController
         ]);
     }
 
+    #[Route('/micro-post/follows', name: 'app_micro_post_follows')]
+    public function follows(MicroPostRepository $posts): Response
+    {
+        /** @var User $currentUser  */
+        $currentUser = $this->getUser();
+        return $this->render('profile/follows.html.twig', [
+            'user' => $currentUser,
+            'posts' => $posts->findAllByAuthors($currentUser->getFollows())
+        ]);
+    }
+
+    #[Route('/micro-post/top-liked', name: 'app_micro_post_topliked')]
+    public function liked(MicroPostRepository $posts): Response
+    {
+        return $this->render('micro_post/top_liked.html.twig', [
+            'posts' => $posts->findAllWithMinLikes(2),
+        ]);
+    }
+
     // SENSIO
     #[Route('/micro-post/{post}', name: 'app_micro_post_show')]
     public function index2(MicroPost $post): Response
@@ -43,11 +62,12 @@ class MicroPostController extends AbstractController
     public function add(Request $request, MicroPostRepository $microPostRepository): Response
     {
         $micropost = new MicroPost();
-        $form = $this->createFormBuilder($micropost)
-            ->add('title', TextType::class)
-            ->add('text', TextType::class)
-            ->add('save', SubmitType::class, ['label' => 'Create'])
-            ->getForm();
+        $form = $this->createForm(MicroPostType::class);
+        // $form = $this->createFormBuilder($micropost)
+        //     ->add('title', TextType::class)
+        //     ->add('text', TextType::class)
+        //     ->add('save', SubmitType::class, ['label' => 'Create'])
+        //     ->getForm();
 
         $form->handleRequest($request);
 
@@ -66,7 +86,7 @@ class MicroPostController extends AbstractController
         ]);
     }
 
-    #[IsGranted(MicroPost::EDIT, 'post')]
+    // #[IsGranted(MicroPost::EDIT, 'post')]
     #[Route('/micro-post/{post}/edit', name: 'app_micro_post_edit')]
     public function edit(MicroPost $post, Request $request, MicroPostRepository $microPostRepository): Response
     {
@@ -90,7 +110,7 @@ class MicroPostController extends AbstractController
         ]);
     }
 
-    #[IsGranted(MicroPost::VIEW, 'post')]
+    // #[IsGranted(MicroPost::VIEW, 'post')]
     #[Route('/micro-post/{post}/comment', name: 'app_micro_post_comment')]
     public function addComment(Request $request, MicroPost $post, CommentRepository $commentRepository): Response
     {

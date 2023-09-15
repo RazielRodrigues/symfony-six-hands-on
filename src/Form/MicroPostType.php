@@ -4,9 +4,11 @@ namespace App\Form;
 
 use App\Entity\MicroPost;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class MicroPostType extends AbstractType
 {
@@ -14,7 +16,8 @@ class MicroPostType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('text');
+            ->add('text', TextareaType::class)
+            ->add('extraPrivacy', CheckboxType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
