@@ -1,33 +1,50 @@
-version: "3.9"
+version: "3"
+
 services:
-  mysql:
-    image: mariadb:10.8.3
-    command: --default-authentication-plugin=mysql_native_password
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-    ports:
-      - 3306:3306
+    db:
+        image: mysql:8.0.33
+        platform: linux/x86_64
+        command: --default-authentication-plugin=mysql_native_password
+        volumes:
+            - "db_app:/var/lib/mysql"
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        ports:
+            - 3306:3306
+        networks:
+            - symfony_app
+    php:
+        build:
+            context: ./php
+            args:
+                TIMEZONE: ${TIMEZONE}
+        volumes:
+            - ../:/var/www/symfony:cached
+            - symfony_app_var:/var/www/symfony/var
+            - symfony_app_vendor:/var/www/symfony/vendor
+        networks:
+            - symfony_app
+    nginx:
+        build:
+            context: ./nginx
+        volumes:
+            - ../:/var/www/symfony:cached
+            - symfony_app_var:/var/www/symfony/var
+            - symfony_app_vendor:/var/www/symfony/vendor
+        ports:
+            - 80:80
+        networks:
+            - symfony_app
+        env_file:
+            - .env.nginx.local
 
-  adminer:
-    image: adminer
-    ports:
-      - 8080:8080
+volumes:
+    symfony_app_var:
+    symfony_app_vendor:
+    db_app:
 
-  mailer:
-    image: schickling/mailcatcher
-    ports:
-      - 1025:1025
-      - 1080:1080
-
-  symfony:
-    image: php:8-fpm
-    working_dir: /var/www/symfony
-    volumes:
-      - ./:/var/www/symfony
-    environment:
-      APP_ENV: dev
-      APP_SECRET: 7ab7e0af12656ac8ff3bf039465b234f
-      DATABASE_URL: mysql://root:root@mysql:3306/symf6-handson?serverVersion=mariadb-10.8.3&charset=utf8mb4
-      MAILER_DSN: smtp://mailer:1025
-    ports:
-      - 8000:8000
+networks:
+    symfony_app:
