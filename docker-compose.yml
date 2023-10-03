@@ -2,21 +2,32 @@ version: "3.9"
 services:
   mysql:
     image: mariadb:10.8.3
-    # Uncomment below when on Mac M1
-    # platform: linux/arm64/v8
     command: --default-authentication-plugin=mysql_native_password
-    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
     ports:
       - 3306:3306
+
   adminer:
     image: adminer
-    restart: always
     ports:
       - 8080:8080
+
   mailer:
     image: schickling/mailcatcher
     ports:
       - 1025:1025
       - 1080:1080
+
+  symfony:
+    image: php:8-fpm
+    working_dir: /var/www/symfony
+    volumes:
+      - ./:/var/www/symfony
+    environment:
+      APP_ENV: dev
+      APP_SECRET: 7ab7e0af12656ac8ff3bf039465b234f
+      DATABASE_URL: mysql://root:root@mysql:3306/symf6-handson?serverVersion=mariadb-10.8.3&charset=utf8mb4
+      MAILER_DSN: smtp://mailer:1025
+    ports:
+      - 8000:8000
